@@ -25,4 +25,9 @@
     <extensions defaultExtensionNs="com.intellij">
 
     </extensions>
+    <actions>
+        <action id="test" class="com.jade.code.companion.TestAction" text="我是testAction" description="我是testAction">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
