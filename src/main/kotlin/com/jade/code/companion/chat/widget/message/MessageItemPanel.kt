@@ -4,6 +4,9 @@ import com.intellij.util.ui.HtmlPanel
 import com.intellij.util.ui.StartupUiUtil
 import java.awt.Font
 
+/**
+ * 展示内容的View.
+ */
 class MessageItemPanel : HtmlPanel() {
 
     private var message: String? = "";

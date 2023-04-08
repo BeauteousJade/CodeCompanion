@@ -10,6 +10,9 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
+/**
+ * 底部的输入框和发送按钮。
+ */
 class BottomBar : JPanel() {
 
     private val textArea = createTextField()

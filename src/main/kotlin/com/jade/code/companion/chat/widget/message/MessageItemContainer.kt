@@ -11,6 +11,10 @@ import java.awt.Dimension
 import javax.swing.JEditorPane
 import javax.swing.JPanel
 
+/**
+ * message Item的容器。
+ * 里面包含头像和内容。
+ */
 class MessageItemContainer(val messageData: MessageData) : JBPanel<MessageItemContainer>(), ItemContainer {
 
     private val messageItem: MessageItemPanel = MessageItemPanel().apply {

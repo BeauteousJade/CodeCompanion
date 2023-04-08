@@ -7,21 +7,29 @@ import com.intellij.openapi.components.Storage
 
 
 fun ChatSetting.getConfig(): Triple<String, String, Int> {
-    return Triple(apiToken, hostName, port)
+    return Triple(apiKey, hostName, port)
 }
 
 fun ChatSetting.setConfig(config: Triple<String, String, Int>) {
-    apiToken = config.first
+    apiKey = config.first
     hostName = config.second
     port = config.third
 }
 
+/**
+ * chatgpt的配置项。
+ */
 @State(name = "chatgpt", storages = [Storage(value = "chatgpt.xml")])
 class ChatSetting : PersistentStateComponent<ChatSetting> {
 
     // 必须public，否则缓存不了。
-    var apiToken: String = ""
+    // chatgpt的key。
+    var apiKey: String = ""
+
+    // 代理服务器地址
     var hostName: String = ""
+
+    // 代理服务器的端口
     var port: Int = 0
 
     companion object {
@@ -35,7 +43,7 @@ class ChatSetting : PersistentStateComponent<ChatSetting> {
     }
 
     override fun loadState(state: ChatSetting) {
-        setConfig(Triple(state.apiToken, state.hostName, state.port))
+        setConfig(Triple(state.apiKey, state.hostName, state.port))
     }
 
 }

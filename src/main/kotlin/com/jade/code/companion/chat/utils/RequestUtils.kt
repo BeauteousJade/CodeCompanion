@@ -13,11 +13,17 @@ import java.net.InetSocketAddress
 import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
+/**
+ * chatgpt接口请求的工具类。
+ */
 object RequestUtils {
 
     private var okHttpClient = createHttpClient()
     private var retrofit = createRetrofit()
 
+    /**
+     * 发起请求。
+     */
     fun request(question: String, key: String): Observable<ChatResult> {
         val body = """{"model":"gpt-3.5-turbo", "messages":[{"role":"user", "content":"$question"}]}"""
         val mediaType = MediaType.parse("application/json")
@@ -25,6 +31,9 @@ object RequestUtils {
         return retrofit.create(Service::class.java).getData("Bearer $key", requestBody)
     }
 
+    /**
+     * 当重新更新了配置，例如代理服务器等，所以重新创建okHttpClient和retrofit的实例。
+     */
     fun apply() {
         okHttpClient = createHttpClient()
         retrofit = createRetrofit()
@@ -33,10 +42,10 @@ object RequestUtils {
 
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder().baseUrl("https://api.openai.com/")
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build()
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
     }
 
     private fun createHttpClient(): OkHttpClient {

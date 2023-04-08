@@ -7,6 +7,9 @@ import java.awt.Image
 import javax.swing.JLabel
 
 
+/**
+ * icon的包装View。
+ */
 class ImageIconWrapper : JLabel() {
 
     companion object {
@@ -17,6 +20,9 @@ class ImageIconWrapper : JLabel() {
         isOpaque = false
     }
 
+    /**
+     * 设置指定图片地址和大小。
+     */
     fun setImage(url: String, size: Dimension) {
         val targetImage = cache[url] ?: loadImage(url, size).let {
             cache[url] = it

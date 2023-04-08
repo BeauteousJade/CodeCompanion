@@ -14,10 +14,18 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 
+/**
+ * chagpt配置项的布局。
+ */
 class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
 
+    // apiKey的输入框
     private val keyTextField = JBTextField()
+
+    // 代理服务器地址的输入框
     private val hostNameTextField = JBTextField()
+
+    // 代理服务器端口的输入框
     private val portTextField = JBTextField()
     private val enableProxyButton = JRadioButton("是否配置代理")
 
@@ -56,6 +64,9 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
         add(Box.createVerticalBox())
     }
 
+    /**
+     * 添加配置项的更新监听。
+     */
     fun addUpdateListener(runBlock: () -> Unit) {
         val updateList = object : DocumentListener {
             override fun insertUpdate(e: DocumentEvent?) {
@@ -76,10 +87,16 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
         portTextField.document.addDocumentListener(updateList)
     }
 
+    /**
+     * 获取当前的所有配置
+     */
     fun getConfig(): Triple<String, String, Int> {
         return Triple(keyTextField.text.trim(), hostNameTextField.text.trim(), portTextField.text.trim().safelyToInt())
     }
 
+    /**
+     * 更新当前的所有配置
+     */
     fun setConfig(config: Triple<String, String, Int>) {
         keyTextField.text = config.first.trim()
         hostNameTextField.text = config.second.trim()

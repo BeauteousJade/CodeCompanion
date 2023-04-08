@@ -43,6 +43,9 @@ class CodeCompanionSettingConfiguration : Configurable {
         return isUpdate
     }
 
+    /**
+     * 当点击apply按钮。
+     */
     override fun apply() {
         isUpdate = false
         ChatSetting.getInstance().setConfig(chatSettingPanel.getConfig())

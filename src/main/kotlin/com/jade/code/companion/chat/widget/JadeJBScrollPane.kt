@@ -4,6 +4,9 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
 import java.awt.Component
 
+/**
+ * 滑动列表。
+ */
 class JadeJBScrollPane : JBScrollPane {
 
     constructor(view: Component?, vsbPolicy: Int, hsbPolicy: Int) : super(view, vsbPolicy, hsbPolicy)

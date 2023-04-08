@@ -19,10 +19,17 @@ import javax.swing.JPanel
 import javax.swing.ScrollPaneConstants
 
 
+/**
+ * 内部区域。
+ */
 class ContentLayout : JBPanel<ContentLayout>() {
 
     private val list = JPanel(VerticalLayout(JBUI.scale(10)))
-    private val scrollPane: JadeJBScrollPane = JadeJBScrollPane(list, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    private val scrollPane: JadeJBScrollPane = JadeJBScrollPane(
+        list,
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    )
 
     init {
         layout = BorderLayout(JBUI.scale(7), 0)

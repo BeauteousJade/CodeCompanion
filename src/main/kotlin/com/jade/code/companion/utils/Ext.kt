@@ -18,21 +18,33 @@ import javax.swing.JLabel
 import javax.swing.JScrollBar
 
 
+/**
+ * 将String用html格式包装。
+ */
 fun String.wrapHtml(): String {
     val newString = replace("\n", "<br>")
     return "<html><body> $newString </html></body>"
 }
 
+/**
+ * String安全转换int.
+ */
 fun String.safelyToInt(): Int {
     return this.toIntOrNull() ?: 0
 }
 
+/**
+ * markdown格式的文案，转为Html.
+ */
 fun String.mdToHtml(): String {
     return Parser.builder().build().let {
         HtmlRenderer.builder().build().render(it.parse(this)).wrapHtml()
     }
 }
 
+/**
+ * 用来监听一个View宽度和高度变化。
+ */
 fun JComponent.bindSize(runBlock: (size: Dimension) -> Unit) {
     addComponentListener(object : ComponentAdapter() {
         override fun componentResized(e: ComponentEvent?) {
@@ -43,6 +55,9 @@ fun JComponent.bindSize(runBlock: (size: Dimension) -> Unit) {
     })
 }
 
+/**
+ * 设置一个View的宽度和高度。
+ */
 fun JComponent.applySize(width: Int, height: Int) {
     size = Dimension(width, height)
     preferredSize = Dimension(width, height)
@@ -50,18 +65,34 @@ fun JComponent.applySize(width: Int, height: Int) {
     repaint()
 }
 
+/**
+ * 加载图片。
+ */
 fun Any.loadImage(url: String, size: Dimension): Image {
-    return (ImageIO.read(javaClass.classLoader.getResource(url))).getScaledInstance(size.width, size.height, Image.SCALE_AREA_AVERAGING)
+    return (ImageIO.read(javaClass.classLoader.getResource(url))).getScaledInstance(
+        size.width,
+        size.height,
+        Image.SCALE_AREA_AVERAGING
+    )
 }
 
+/**
+ * 滚动到顶部。
+ */
 fun JBScrollPane.scrollToTop() {
     verticalScrollBar.value = 0
 }
 
+/**
+ * 滚动到底部。
+ */
 fun JBScrollPane.scrollToBottom() {
     verticalScrollBar.value = verticalScrollBar.maximum
 }
 
+/**
+ * 给任意View设置一个点击事件。
+ */
 fun JComponent.setOnClickListener(runBlock: () -> Unit) {
     addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
@@ -69,6 +100,11 @@ fun JComponent.setOnClickListener(runBlock: () -> Unit) {
         }
     })
 }
+
+/**
+ * 当鼠标移动到View上，出现一个Tips提示。
+ * 当鼠标点击或者移出该View，则隐藏该Tips提示。
+ */
 fun JComponent.showTipsWhenMouseEntered(content: String) {
     addMouseListener(object : MouseAdapter() {
         private var popup: Balloon? = null

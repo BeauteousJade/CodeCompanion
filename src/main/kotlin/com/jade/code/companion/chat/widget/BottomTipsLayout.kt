@@ -9,6 +9,9 @@ import java.awt.BorderLayout
 import javax.swing.BoxLayout
 import javax.swing.JComponent
 
+/**
+ * 底部的Tips。
+ */
 class BottomTipsLayout(val tip: Tip) : JBPanel<BottomTipsLayout>(), ItemContainer {
 
     init {

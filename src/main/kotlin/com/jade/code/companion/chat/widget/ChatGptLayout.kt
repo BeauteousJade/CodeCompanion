@@ -29,7 +29,7 @@ class ChatGptLayout : JBPanel<ChatGptLayout>() {
             bottomBar.applySize(it.width, bottomHeight)
         }
         bottomBar.setOnClickListener {
-            val key = ChatSetting.getInstance().apiToken
+            val key = ChatSetting.getInstance().apiKey
             if (key.trim().isEmpty()) {
                 Utils.notifyConfigKey()
                 return@setOnClickListener
@@ -42,7 +42,7 @@ class ChatGptLayout : JBPanel<ChatGptLayout>() {
 
 
     private fun request(question: String) {
-        val key = ChatSetting.getInstance().apiToken
+        val key = ChatSetting.getInstance().apiKey
         bottomBar.setEnable(false)
         contentLayout.removeTips(Tip.RETRY, Tip.WAIT)
         contentLayout.addTip(Tip.WAIT)
