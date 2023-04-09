@@ -42,23 +42,47 @@ object RequestUtils {
 
     private fun createRetrofit(): Retrofit {
         return Retrofit.Builder().baseUrl("https://api.openai.com/")
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build()
     }
 
     private fun createHttpClient(): OkHttpClient {
         return OkHttpClient.Builder().apply {
-            val hostName = ChatSetting.getInstance().hostName.trim()
-            val port = ChatSetting.getInstance().port
-            if (hostName.isNotEmpty() && port > 0) {
-                proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress(hostName, port)))
+            createProxy()?.let {
+                proxy(it)
+            } ?: run {
+                proxy(null)
             }
             callTimeout(60, TimeUnit.SECONDS)
             connectTimeout(60, TimeUnit.SECONDS)
             writeTimeout(60, TimeUnit.SECONDS)
             readTimeout(60, TimeUnit.SECONDS)
         }.build()
+    }
+
+    /**
+     * 根据不同的配置，设置不同的代理
+     */
+    private fun createProxy(): Proxy? {
+        val proxyType = ChatSetting.getInstance().proxyType
+        val hostName = ChatSetting.getInstance().hostName.trim()
+        val port = ChatSetting.getInstance().port
+        if (proxyType == ChatSetting.PROXY_TYPE_NONE) {
+            return null
+        }
+        if (hostName.isEmpty() || proxyType <= 0) {
+            return null
+        }
+        return when (proxyType) {
+            ChatSetting.PROXY_TYPE_HTTP -> {
+                Proxy(Proxy.Type.HTTP, InetSocketAddress(hostName, port))
+            }
+
+            else -> {
+                Proxy(Proxy.Type.SOCKS, InetSocketAddress(hostName, port))
+            }
+        }
     }
 }

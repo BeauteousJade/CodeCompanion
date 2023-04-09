@@ -6,15 +6,18 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
 
-fun ChatSetting.getConfig(): Triple<String, String, Int> {
-    return Triple(apiKey, hostName, port)
+fun ChatSetting.getConfig(): ChatSettingConfig {
+    return ChatSettingConfig(apiKey, hostName, port, proxyType)
 }
 
-fun ChatSetting.setConfig(config: Triple<String, String, Int>) {
-    apiKey = config.first
-    hostName = config.second
-    port = config.third
+fun ChatSetting.setConfig(config: ChatSettingConfig) {
+    apiKey = config.apiKey
+    hostName = config.hostName
+    port = config.port
+    proxyType = config.proxyType
 }
+
+data class ChatSettingConfig(val apiKey: String, val hostName: String, val port: Int, val proxyType: Int)
 
 /**
  * chatgpt的配置项。
@@ -32,7 +35,16 @@ class ChatSetting : PersistentStateComponent<ChatSetting> {
     // 代理服务器的端口
     var port: Int = 0
 
+    // 代理类型
+    var proxyType: Int = PROXY_TYPE_NONE
+
     companion object {
+
+        const val PROXY_TYPE_NONE = 0
+        const val PROXY_TYPE_HTTP = 1
+        const val PROXY_TYPE_SOCKET = 2
+
+
         fun getInstance(): ChatSetting {
             return ApplicationManager.getApplication().getService(ChatSetting::class.java)
         }
@@ -43,7 +55,7 @@ class ChatSetting : PersistentStateComponent<ChatSetting> {
     }
 
     override fun loadState(state: ChatSetting) {
-        setConfig(Triple(state.apiKey, state.hostName, state.port))
+        setConfig(ChatSettingConfig(state.apiKey, state.hostName, state.port, state.proxyType))
     }
 
 }

@@ -6,10 +6,7 @@ import com.intellij.ui.components.JBTextField
 import com.jade.code.companion.utils.safelyToInt
 import java.awt.GridLayout
 import java.awt.event.ItemEvent
-import javax.swing.Box
-import javax.swing.BoxLayout
-import javax.swing.JPanel
-import javax.swing.JRadioButton
+import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
@@ -27,7 +24,18 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
 
     // 代理服务器端口的输入框
     private val portTextField = JBTextField()
-    private val enableProxyButton = JRadioButton("是否配置代理")
+    private val noneProxyButton = JRadioButton("关闭代理")
+    private val httpProxyButton = JRadioButton("http代理")
+    private val socketProxyButton = JRadioButton("socket代理")
+    private var proxyType: Int = ChatSetting.PROXY_TYPE_NONE
+
+    private val proxyButtonMap = mapOf(Pair(ChatSetting.PROXY_TYPE_NONE, noneProxyButton), Pair(ChatSetting.PROXY_TYPE_HTTP, httpProxyButton), Pair(ChatSetting.PROXY_TYPE_SOCKET, socketProxyButton))
+
+    private val buttonGroup = ButtonGroup().apply {
+        add(noneProxyButton)
+        add(httpProxyButton)
+        add(socketProxyButton)
+    }
 
     init {
         layout = GridLayout(15, 1)
@@ -38,16 +46,21 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
         })
         add(JPanel().apply {
             layout = BoxLayout(this, BoxLayout.X_AXIS)
-            enableProxyButton.addItemListener {
-                val isSelect = it.stateChange == ItemEvent.SELECTED
-                hostNameTextField.isEnabled = isSelect
-                portTextField.isEnabled = isSelect
+            noneProxyButton.addItemListener {
+                updateProxyType(it, ChatSetting.PROXY_TYPE_NONE)
             }
-            enableProxyButton.isSelected = false
-            hostNameTextField.isEnabled = false
-            portTextField.isEnabled = false
-            add(enableProxyButton)
-            add(Box.createVerticalGlue())
+            httpProxyButton.addItemListener {
+                updateProxyType(it, ChatSetting.PROXY_TYPE_HTTP)
+            }
+            socketProxyButton.addItemListener {
+                updateProxyType(it, ChatSetting.PROXY_TYPE_SOCKET)
+            }
+
+            add(noneProxyButton)
+            add(Box.createHorizontalStrut(5))
+            add(httpProxyButton)
+            add(Box.createHorizontalStrut(5))
+            add(socketProxyButton)
         })
 
         add(JPanel().apply {
@@ -62,6 +75,20 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
             add(portTextField)
         })
         add(Box.createVerticalBox())
+    }
+
+    private fun updateProxyType(e: ItemEvent, targetType: Int) {
+        val isSelect = e.stateChange == ItemEvent.SELECTED
+        if (isSelect) {
+            proxyType = targetType
+        }
+        hostNameTextField.isEnabled = proxyType != ChatSetting.PROXY_TYPE_NONE
+        portTextField.isEnabled = proxyType != ChatSetting.PROXY_TYPE_NONE
+
+        // 触发更新，保证apply按钮能够点击
+        val oldText = portTextField.text
+        portTextField.text = ""
+        portTextField.text = oldText
     }
 
     /**
@@ -90,24 +117,20 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
     /**
      * 获取当前的所有配置
      */
-    fun getConfig(): Triple<String, String, Int> {
-        return Triple(keyTextField.text.trim(), hostNameTextField.text.trim(), portTextField.text.trim().safelyToInt())
+    fun getConfig(): ChatSettingConfig {
+        return ChatSettingConfig(keyTextField.text.trim(), hostNameTextField.text.trim(), portTextField.text.trim().safelyToInt(), proxyType)
     }
 
     /**
      * 更新当前的所有配置
      */
-    fun setConfig(config: Triple<String, String, Int>) {
-        keyTextField.text = config.first.trim()
-        hostNameTextField.text = config.second.trim()
-        portTextField.text = config.third.takeIf {
+    fun setConfig(config: ChatSettingConfig) {
+        keyTextField.text = config.apiKey.trim()
+        hostNameTextField.text = config.hostName.trim()
+        portTextField.text = config.port.takeIf {
             it > 0
         }?.toString() ?: ""
-
-        val isNotEmpty = hostNameTextField.text.isNotEmpty() || portTextField.text.isNotEmpty()
-        enableProxyButton.isSelected = isNotEmpty
-        hostNameTextField.isEnabled = isNotEmpty
-        portTextField.isEnabled = isNotEmpty
+        proxyButtonMap[config.proxyType]?.isSelected = true
     }
 
 }
