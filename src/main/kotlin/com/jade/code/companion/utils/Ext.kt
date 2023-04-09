@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent
 import javax.imageio.ImageIO
 import javax.swing.JComponent
 import javax.swing.JLabel
-import javax.swing.JScrollBar
 
 
 /**
@@ -93,7 +92,7 @@ fun JBScrollPane.scrollToBottom() {
 /**
  * 给任意View设置一个点击事件。
  */
-fun JComponent.setOnClickListener(runBlock: () -> Unit) {
+fun JComponent.setMouseClickListener(runBlock: () -> Unit) {
     addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
             runBlock()

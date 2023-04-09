@@ -48,17 +48,17 @@ class ContentLayout : JBPanel<ContentLayout>() {
             add(ImageIconWrapper().apply {
                 setImage("icons/scroll_top.png", Dimension(iconSize, iconSize))
                 showTipsWhenMouseEntered("滑动到顶部")
-                setOnClickListener { scrollPane.scrollToTop() }
+                setMouseClickListener { scrollPane.scrollToTop() }
             })
             add(ImageIconWrapper().apply {
                 setImage("icons/scroll_bottom.png", Dimension(iconSize, iconSize))
                 showTipsWhenMouseEntered("滑动到底部")
-                setOnClickListener { scrollPane.scrollToBottom() }
+                setMouseClickListener { scrollPane.scrollToBottom() }
             })
             add(ImageIconWrapper().apply {
                 setImage("icons/clear.png", Dimension(iconSize, iconSize))
                 showTipsWhenMouseEntered("清空所有数据")
-                setOnClickListener {
+                setMouseClickListener {
                     list.removeAll()
                     list.updateUI()
                 }
