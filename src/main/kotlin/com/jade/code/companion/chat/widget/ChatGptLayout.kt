@@ -9,15 +9,15 @@ import com.jade.code.companion.chat.utils.RequestUtils
 import com.jade.code.companion.chat.widget.bottom.BottomBar
 import com.jade.code.companion.chat.widget.content.ContentLayout
 import com.jade.code.companion.utils.*
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 import javax.swing.BoxLayout
 
 class ChatGptLayout : JBPanel<ChatGptLayout>() {
 
     private val contentLayout = createContent()
     private val bottomBar = createBottomBar()
+    private var requestDisposable: Disposable? = null
 
     init {
         add(contentLayout)
@@ -44,10 +44,15 @@ class ChatGptLayout : JBPanel<ChatGptLayout>() {
     private fun request(question: String) {
         val key = ChatSetting.getInstance().apiKey
         bottomBar.setEnable(false)
-        contentLayout.removeTips(Tip.RETRY, Tip.WAIT)
-        contentLayout.addTip(Tip.WAIT)
+        cancel()
+        contentLayout.addTip(Tip.WAIT).apply {
+            setMouseClickListener {
+                cancel()
+                bottomBar.setEnable(true)
+            }
+        }
         println(question)
-        RequestUtils.request(question, key).subscribeOn(Schedulers.io()).subscribe({
+        requestDisposable = RequestUtils.request(question, key).subscribeOn(Schedulers.io()).subscribe({
             println(it)
             it.choices[0].message?.content?.let { answer ->
                 val html = answer.mdToHtml()
@@ -63,17 +68,20 @@ class ChatGptLayout : JBPanel<ChatGptLayout>() {
             contentLayout.removeTips(Tip.WAIT)
             bottomBar.setEnable(true)
             val tipsLayout = contentLayout.addTip(Tip.RETRY)
-            tipsLayout.addMouseListener(object : MouseAdapter() {
-                override fun mouseClicked(e: MouseEvent?) {
-                    retry()
-                }
-            })
+            tipsLayout.setMouseClickListener {
+                retry()
+            }
             it.printStackTrace()
         })
     }
 
     private fun retry() {
         request(contentLayout.getLastQuestion())
+    }
+
+    private fun cancel() {
+        contentLayout.removeTips(Tip.RETRY, Tip.WAIT)
+        requestDisposable?.dispose()
     }
 
     private fun createBottomBar(): BottomBar {
