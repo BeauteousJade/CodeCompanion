@@ -6,7 +6,7 @@
 ## 1. 插件的安装
 
 &emsp;&emsp;未来打算提供两种方式:
-> 1. github下载jar，本地安装。可在github release页面下载安装。
+> 1. github下载zip，本地安装。可在github release页面下载安装。
 >2. idea 插件市场 -- 待上传。
 
 ## 2. chagpt的使用
