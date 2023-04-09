@@ -1,11 +1,12 @@
+fun properties(key: String) = project.findProperty(key).toString()
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.7.10"
     id("org.jetbrains.intellij") version "1.13.2"
 }
 
-group = "com.jade.companion"
-version = "1.0"
+group = properties("pluginGroup")
+version = properties("pluginVersion")
 
 repositories {
     maven {
@@ -29,7 +30,6 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 tasks {
@@ -43,8 +43,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("222.2680.4")
-        untilBuild.set("231.*")
+        sinceBuild.set(properties("pluginSinceBuild"))
+        untilBuild.set(properties("pluginUntilBuild"))
     }
 
     signPlugin {
