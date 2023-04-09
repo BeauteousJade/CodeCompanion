@@ -42,7 +42,7 @@ class ChatSetting : PersistentStateComponent<ChatSetting> {
 
         const val PROXY_TYPE_NONE = 0
         const val PROXY_TYPE_HTTP = 1
-        const val PROXY_TYPE_SOCKET = 2
+        const val PROXY_TYPE_SOCKS = 2
 
 
         fun getInstance(): ChatSetting {

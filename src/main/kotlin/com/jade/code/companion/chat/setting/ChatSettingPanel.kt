@@ -26,15 +26,15 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
     private val portTextField = JBTextField()
     private val noneProxyButton = JRadioButton("关闭代理")
     private val httpProxyButton = JRadioButton("http代理")
-    private val socketProxyButton = JRadioButton("socket代理")
+    private val socksProxyButton = JRadioButton("socks代理")
     private var proxyType: Int = ChatSetting.PROXY_TYPE_NONE
 
-    private val proxyButtonMap = mapOf(Pair(ChatSetting.PROXY_TYPE_NONE, noneProxyButton), Pair(ChatSetting.PROXY_TYPE_HTTP, httpProxyButton), Pair(ChatSetting.PROXY_TYPE_SOCKET, socketProxyButton))
+    private val proxyButtonMap = mapOf(Pair(ChatSetting.PROXY_TYPE_NONE, noneProxyButton), Pair(ChatSetting.PROXY_TYPE_HTTP, httpProxyButton), Pair(ChatSetting.PROXY_TYPE_SOCKS, socksProxyButton))
 
     private val buttonGroup = ButtonGroup().apply {
         add(noneProxyButton)
         add(httpProxyButton)
-        add(socketProxyButton)
+        add(socksProxyButton)
     }
 
     init {
@@ -52,15 +52,15 @@ class ChatSettingPanel : JBPanel<ChatSettingPanel>() {
             httpProxyButton.addItemListener {
                 updateProxyType(it, ChatSetting.PROXY_TYPE_HTTP)
             }
-            socketProxyButton.addItemListener {
-                updateProxyType(it, ChatSetting.PROXY_TYPE_SOCKET)
+            socksProxyButton.addItemListener {
+                updateProxyType(it, ChatSetting.PROXY_TYPE_SOCKS)
             }
 
             add(noneProxyButton)
             add(Box.createHorizontalStrut(5))
             add(httpProxyButton)
             add(Box.createHorizontalStrut(5))
-            add(socketProxyButton)
+            add(socksProxyButton)
         })
 
         add(JPanel().apply {
